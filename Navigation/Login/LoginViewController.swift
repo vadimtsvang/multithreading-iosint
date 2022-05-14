@@ -7,8 +7,9 @@
 
 import UIKit
 
-class LogInViewController: UIViewController {
+class LoginViewController: UIViewController {
     
+    var delegate: LoginViewControllerDelegate?
     let userService = CurrentUserService()
     let userServiceTest = TestUserService()
     
@@ -79,6 +80,7 @@ class LogInViewController: UIViewController {
         textField.autocapitalizationType = .none
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 10
         textField.backgroundColor = .systemGray6
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
         return textField
@@ -111,6 +113,9 @@ class LogInViewController: UIViewController {
         super.viewDidLoad()
         createSubviews()
         configureUI()
+        
+        loginTextField.delegate = self
+        passwordTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -124,36 +129,69 @@ class LogInViewController: UIViewController {
     }
     
     @objc func goToPofileVC() {
-        if let userName = loginTextField.text, !userName.isEmpty {
-            #if DEBUG
-            if let user = userServiceTest.addUser(userName: userName) {
-                let profileVC = ProfileViewController(userService: userServiceTest.self, userName: user.userName)
-                navigationController?.pushViewController(profileVC, animated: true)
-            } else {
-                showAlert(message: "Пользователь не найден")
-            }
-            #else
-            if let user = userService.addUser(userName: userName){
-                let profileVC = ProfileViewController(userService: userService.self, userName: userName)
-                navigationController?.pushViewController(profileVC, animated: true)
-            } else {
-                showAlert(message: "Пользователь не найден")
-            }
-            #endif
+        // Task 3
+        //        if let userName = loginTextField.text, !userName.isEmpty {
+        //            #if DEBUG
+        //            if let user = userServiceTest.addUser(userName: userName) {
+        //                let profileVC = ProfileViewController(userService: userServiceTest.self, userName: user.userName)
+        //                navigationController?.pushViewController(profileVC, animated: true)
+        //            } else {
+        //                showAlert(message: "Пользователь не найден")
+        //            }
+        //            #else
+        //            if let user = userService.addUser(userName: userName){
+        //                let profileVC = ProfileViewController(userService: userService.self, userName: userName)
+        //                navigationController?.pushViewController(profileVC, animated: true)
+        //            } else {
+        //                showAlert(message: "Пользователь не найден")
+        //            }
+        //            #endif
+        //        } else {
+        //            showAlert(message: "Ввидите имя пользователя")
+        //        }
+        //    }
+        
+        //Task 4
+        
+        #if DEBUG
+        let userServise = TestUserService()
+        #else
+        let userServise = CurrentUserService()
+        #endif
+        
+        if let login = loginTextField.text, !login.isEmpty, let password = passwordTextField.text, !password.isEmpty {
+            if delegate?.checkTextFields(enterLogin: login, enterPassword: passwordTextField.text ?? "") == true {
+            let profileVC = ProfileViewController(userService: userServise, userName: login)
+            navigationController?.pushViewController(profileVC, animated: true)
         } else {
-            showAlert(message: "Ввидите имя пользователя")
+            showAlert(message: "Неверный логин или пароль")
+        }
+        } else {
+            showAlert(message: "Ввидите имя пользователя и пароль")
         }
     }
 }
 
-extension LogInViewController {
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == loginTextField {
+            textField.resignFirstResponder()
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+}
+
+extension LoginViewController {
     private func showAlert(message: String) {
         let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "Ок", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 }
-extension LogInViewController {
+extension LoginViewController {
     private func createSubviews() {
         [scrollView, contentView, stackView, logoImage, loginButton, loginTextField, passwordTextField].forEach { element in
             view.addSubviews(element)

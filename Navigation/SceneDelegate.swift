@@ -11,6 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    private let loginInspectorFactory = MyLoginFactory()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -21,10 +22,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = UITabBarController()
         
         let feedVC = FeedViewController()
+        let loginVC = LoginViewController()
+
+        // Task 4-1
+        //loginVC.delegate = LoginInspector()
+
+        // Task 4-2
+        loginVC.delegate = loginInspectorFactory.createLoginInspector()
+        
         feedVC.view.backgroundColor = .magenta
         feedVC.tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "doc.append.fill"), tag: 0)
         
-        let loginVC = LogInViewController()
         loginVC.view.backgroundColor = .lightGray
         loginVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.rectangle.fill"), tag: 1)
         
@@ -34,5 +42,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.viewControllers = [feedNC, loginNC]
         
         window?.rootViewController = tabBarController
+        
     }
 }

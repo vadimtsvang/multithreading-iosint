@@ -16,7 +16,7 @@ class ProfileHeaderView: UIView {
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.white.cgColor
         imageView.layer.borderWidth = 3
-        imageView.layer.cornerRadius = 50
+        imageView.layer.cornerRadius = 55
         return imageView
     }()
     
@@ -58,13 +58,31 @@ class ProfileHeaderView: UIView {
         return textField
     }()
     
+    //private var baseInset: CGFloat { return 16 }
+    
+    private var statusText = String()
+    
+    let animationView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.alpha = 0
+        view.toAutoLayout()
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         createSubviews()
+        configure()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configure() {
+        statusTextField.delegate = self
+
     }
     
     private func createSubviews() {
@@ -101,5 +119,25 @@ class ProfileHeaderView: UIView {
     @objc func buttonClicked() {
         print(statusTextField.text ?? "No text")
     }
+}
+
+extension ProfileHeaderView : UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if statusTextField.text == "Waiting for something..." {
+            statusTextField.text = nil
+            statusTextField.textColor = .black
+        }
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if let text = statusTextField.text, text.isEmpty {
+            statusTextField.text = "Waiting for something..."
+            statusTextField.textColor = .gray
+            statusLabel.text = "Set up status"
+        }
+    }
+   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+       statusTextField.resignFirstResponder()
+       return true
+   }
 }
 

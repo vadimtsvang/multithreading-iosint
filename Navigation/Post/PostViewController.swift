@@ -9,11 +9,12 @@ import UIKit
 
 class PostViewController: UIViewController {
     
-    var post: Post?
+    var post = Post(title: "")
+    var buttonInfo = UIBarButtonItem()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // title = post?.title
+        self.title = post.title
         view.backgroundColor = .brown
         
         let barButton = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(tapInfo))

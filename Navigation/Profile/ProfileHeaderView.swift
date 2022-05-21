@@ -19,17 +19,31 @@ class ProfileHeaderView: UIView {
         imageView.layer.cornerRadius = 55
         return imageView
     }()
+
+// Task 6
+//    private lazy var setStatusButton: UIButton = {
+//        let button = UIButton()
+//        button.backgroundColor = .systemBlue
+//        button.setTitle("My status", for: .normal)
+//        button.layer.cornerRadius = 4
+//        button.layer.shadowColor = UIColor.black.cgColor
+//        button.layer.shadowOffset = CGSize(width: 4, height: 4)
+//        button.layer.shadowOpacity = 0.7
+//        button.layer.shadowRadius = 10
+//        button.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+//        return button
+//    }()
     
-    private lazy var setStatusButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .systemBlue
-        button.setTitle("My status", for: .normal)
-        button.layer.cornerRadius = 4
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 4, height: 4)
-        button.layer.shadowOpacity = 0.7
-        button.layer.shadowRadius = 10
-        button.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+    private lazy var setStatusButton: CustomButton = {
+        let button = CustomButton(title: "My Title", titleColor: .white, backgroundColor: nil, backgroundImage: UIImage(imageLiteralResourceName: "blue_pixel"), buttonAction: { [weak self] in
+            if ((self?.statusText.isEmpty) != nil) {
+                self?.statusText = "Set status"
+            }
+            self?.statusLabel.text = self?.statusText
+            self?.endEditing(true)
+        })
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
         return button
     }()
     
@@ -57,9 +71,7 @@ class ProfileHeaderView: UIView {
         textField.placeholder = "  Input Text"
         return textField
     }()
-    
-    //private var baseInset: CGFloat { return 16 }
-    
+        
     private var statusText = String()
     
     let animationView: UIView = {
@@ -116,9 +128,9 @@ class ProfileHeaderView: UIView {
         ])
     }
     
-    @objc func buttonClicked() {
-        print(statusTextField.text ?? "No text")
-    }
+//    @objc func buttonClicked() {
+//        print(statusTextField.text ?? "No text")
+//    }
 }
 
 extension ProfileHeaderView : UITextFieldDelegate {

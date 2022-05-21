@@ -48,6 +48,7 @@ class PhotosViewController: UIViewController {
         
         navigationController?.isNavigationBarHidden = true
         imagePublisherFacade.removeSubscription(for: self)
+        imagePublisherFacade.rechargeImageLibrary()
     }
 }
 

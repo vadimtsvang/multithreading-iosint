@@ -14,17 +14,18 @@ class Checker {
         return instance
     }()
     
+    #if DEBUG
+    private let loginUser = "Corgi"
+    #else
     private let loginUser = "James"
+    #endif
+    
     private let passwordUser = "123123"
     
     private init() {}
     
     func checkLoginAndPassword(enterLogin: String, enterPassword: String) -> Bool {
-        if loginUser == enterLogin, passwordUser == enterPassword {
-            return true
-        } else {
-            return false
-        }
+        loginUser == enterLogin && passwordUser == enterPassword
     }
-
 }
+

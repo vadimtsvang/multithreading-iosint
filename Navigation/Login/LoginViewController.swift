@@ -32,32 +32,57 @@ class LoginViewController: UIViewController {
         return logo
     }()
     
-    private var loginButton: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .normal)
-        button.alpha = 1.0
-        
-        switch button.state {
-        case .selected:
-            button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .selected)
-            button.alpha = 0.8
-            
-        case .highlighted:
-            button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .highlighted)
-            button.alpha = 0.8
-            
-        case .disabled:
-            button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .disabled)
-            button.alpha = 0.8
-        default: break
-        }
+    //    private var loginButton: UIButton = {
+    //        let button = UIButton()
+    //        button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .normal)
+    //        button.alpha = 1.0
+    //
+    //        switch button.state {
+    //        case .selected:
+    //            button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .selected)
+    //            button.alpha = 0.8
+    //
+    //        case .highlighted:
+    //            button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .highlighted)
+    //            button.alpha = 0.8
+    //
+    //        case .disabled:
+    //            button.setBackgroundImage(UIImage(named: "blue_pixel"), for: .disabled)
+    //            button.alpha = 0.8
+    //        default: break
+    //        }
+    //        button.layer.cornerRadius = 10
+    //        button.setTitleColor(.white, for: .normal)
+    //        button.clipsToBounds = true
+    //        button.setTitle("Log In", for: .normal)
+    //        button.addTarget(self, action: #selector(goToPofileVC), for: .touchUpInside)
+    //        return button
+    //    }()
+    
+    // Task 6
+    private lazy var loginButton: CustomButton = {
+        let button = CustomButton(title: "Log In", titleColor: .white, backgroundColor: nil, backgroundImage: UIImage(imageLiteralResourceName: "blue_pixel"), buttonAction: { [weak self] in
+            #if DEBUG
+            let userServise = TestUserService()
+            #else
+            let userServise = CurrentUserService()
+            #endif
+            if let login = self?.loginTextField.text, !login.isEmpty, let password = self?.passwordTextField.text, !password.isEmpty {
+                if self?.delegate?.checkTextFields(enterLogin: login, enterPassword: password) == true {
+                    let profileVC = ProfileViewController(userService: userServise, userName: login)
+                    self?.navigationController?.pushViewController(profileVC, animated: true)
+                } else {
+                    self?.showAlert(message: "Неверный логин или пароль")
+                }
+            } else {
+                self?.showAlert(message: "Введите имя пользователя и пароль")
+            }
+        })
         button.layer.cornerRadius = 10
-        button.setTitleColor(.white, for: .normal)
         button.clipsToBounds = true
-        button.setTitle("Log In", for: .normal)
-        button.addTarget(self, action: #selector(goToPofileVC), for: .touchUpInside)
         return button
     }()
+    
     
     private var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -81,6 +106,9 @@ class LoginViewController: UIViewController {
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 10
+        textField.clipsToBounds = true
+        textField.returnKeyType = UIReturnKeyType.done
+        textField.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         textField.backgroundColor = .systemGray6
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
         return textField
@@ -111,11 +139,13 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createSubviews()
-        configureUI()
         
         loginTextField.delegate = self
         passwordTextField.delegate = self
+        
+        createSubviews()
+        configureUI()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -127,109 +157,111 @@ class LoginViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+}
     
-    @objc func goToPofileVC() {
-        // Task 3
-        //        if let userName = loginTextField.text, !userName.isEmpty {
-        //            #if DEBUG
-        //            if let user = userServiceTest.addUser(userName: userName) {
-        //                let profileVC = ProfileViewController(userService: userServiceTest.self, userName: user.userName)
-        //                navigationController?.pushViewController(profileVC, animated: true)
-        //            } else {
-        //                showAlert(message: "Пользователь не найден")
-        //            }
-        //            #else
-        //            if let user = userService.addUser(userName: userName){
-        //                let profileVC = ProfileViewController(userService: userService.self, userName: userName)
-        //                navigationController?.pushViewController(profileVC, animated: true)
-        //            } else {
-        //                showAlert(message: "Пользователь не найден")
-        //            }
-        //            #endif
-        //        } else {
-        //            showAlert(message: "Ввидите имя пользователя")
-        //        }
-        //    }
-        
-        //Task 4
-        
-        #if DEBUG
-        let userServise = TestUserService()
-        #else
-        let userServise = CurrentUserService()
-        #endif
-        
-        if let login = loginTextField.text, !login.isEmpty, let password = passwordTextField.text, !password.isEmpty {
-            if delegate?.checkTextFields(enterLogin: login, enterPassword: passwordTextField.text ?? "") == true {
-            let profileVC = ProfileViewController(userService: userServise, userName: login)
-            navigationController?.pushViewController(profileVC, animated: true)
-        } else {
-            showAlert(message: "Неверный логин или пароль")
-        }
-        } else {
-            showAlert(message: "Ввидите имя пользователя и пароль")
+    //@objc func goToPofileVC() {
+    // Task 3
+    //        if let userName = loginTextField.text, !userName.isEmpty {
+    //            #if DEBUG
+    //            if let user = userServiceTest.addUser(userName: userName) {
+    //                let profileVC = ProfileViewController(userService: userServiceTest.self, userName: user.userName)
+    //                navigationController?.pushViewController(profileVC, animated: true)
+    //            } else {
+    //                showAlert(message: "Пользователь не найден")
+    //            }
+    //            #else
+    //            if let user = userService.addUser(userName: userName){
+    //                let profileVC = ProfileViewController(userService: userService.self, userName: userName)
+    //                navigationController?.pushViewController(profileVC, animated: true)
+    //            } else {
+    //                showAlert(message: "Пользователь не найден")
+    //            }
+    //            #endif
+    //        } else {
+    //            showAlert(message: "Введите имя пользователя")
+    //        }
+    //    }
+    //
+    //Task 4
+    //
+    //        #if DEBUG
+    //        let userServise = TestUserService()
+    //        #else
+    //        let userServise = CurrentUserService()
+    //        #endif
+    //
+    //        if let login = loginTextField.text, !login.isEmpty, let password = passwordTextField.text, !password.isEmpty {
+    //            if delegate?.checkTextFields(enterLogin: login, enterPassword: passwordTextField.text ?? "") == true {
+    //                let profileVC = ProfileViewController(userService: userServise, userName: login)
+    //                navigationController?.pushViewController(profileVC, animated: true)
+    //            } else {
+    //                showAlert(message: "Неверный логин или пароль")
+    //            }
+    //        } else {
+    //            showAlert(message: "Введите имя пользователя и пароль")
+    //        }
+    //    }
+    //}
+    
+    extension LoginViewController: UITextFieldDelegate {
+        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            if textField == loginTextField {
+                textField.resignFirstResponder()
+                passwordTextField.becomeFirstResponder()
+            } else if textField == passwordTextField {
+                textField.resignFirstResponder()
+            }
+            return true
         }
     }
-}
+    
+    extension LoginViewController {
+        private func showAlert(message: String) {
+            let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ок", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 
-extension LoginViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == loginTextField {
-            textField.resignFirstResponder()
-            passwordTextField.becomeFirstResponder()
-        } else if textField == passwordTextField {
-            textField.resignFirstResponder()
+    extension LoginViewController {
+        private func createSubviews() {
+            [scrollView, contentView, stackView, logoImage, loginButton, loginTextField, passwordTextField].forEach { element in
+                view.addSubviews(element)
+                element.toAutoLayout()
+            }
+            
+            stackView.addArrangedSubview(loginTextField)
+            stackView.addArrangedSubview(passwordTextField)
+            
+            NSLayoutConstraint.activate([
+                scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                
+                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+                contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
+                
+                logoImage.heightAnchor.constraint(equalToConstant: 100),
+                logoImage.widthAnchor.constraint(equalToConstant: 100),
+                logoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120),
+                logoImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                
+                stackView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 120),
+                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                loginTextField.heightAnchor.constraint(equalToConstant: 50),
+                passwordTextField.heightAnchor.constraint(equalToConstant: 50),
+                
+                loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16),
+                loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                loginButton.heightAnchor.constraint(equalToConstant: 50)
+            ])
         }
-        return true
     }
-}
-
-extension LoginViewController {
-    private func showAlert(message: String) {
-        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Ок", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-}
-extension LoginViewController {
-    private func createSubviews() {
-        [scrollView, contentView, stackView, logoImage, loginButton, loginTextField, passwordTextField].forEach { element in
-            view.addSubviews(element)
-            element.toAutoLayout()
-        }
-        
-        stackView.addArrangedSubview(loginTextField)
-        stackView.addArrangedSubview(passwordTextField)
-        
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor),
-            
-            logoImage.heightAnchor.constraint(equalToConstant: 100),
-            logoImage.widthAnchor.constraint(equalToConstant: 100),
-            logoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120),
-            logoImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            
-            stackView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 120),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            loginTextField.heightAnchor.constraint(equalToConstant: 50),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 50),
-            
-            loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16),
-            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            loginButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-}
 

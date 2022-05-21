@@ -15,7 +15,6 @@ public struct PostVK {
     public let likes: Int
     public let views: Int
     public let filter: ColorFilter
-
     
 //    public init(author: String, description: String, image: String, likes: Int, views: Int) {
 //        self.author = author

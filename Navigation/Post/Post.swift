@@ -2,15 +2,16 @@
 //  Post.swift
 //  Navigation
 //
-//  Created by Vadim on 16.05.2022.
+//  Created by Vadim on 25.02.2022.
 //
 
 import Foundation
-import UIKit
 
-public struct Post {
-    public var title: String
-    public init(title: String){
-        self.title = title
-    }
+struct Post {
+
+    var title: String
+    var description: String
+    var image: String
+    var likes: UInt
+    var views: UInt
 }

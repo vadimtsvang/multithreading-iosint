@@ -9,30 +9,35 @@ import UIKit
 
 class InfoViewController: UIViewController {
 
+    private let coordinator: InfoCoordinator?
+    private let viewModel: InfoViewModel?
+
+    init(coordinator: InfoCoordinator?, viewModel: InfoViewModel) {
+        self.coordinator = coordinator
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    lazy var buttonAlert: ButtonAlert = {
+        let button = ButtonAlert(title: "Info", titleColor: .yellow) { [ weak self ] in
+            guard let self = self else { return }
+            self.pressButton()
+        }
+        return button
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
-        makeMoreButton()
+        view.backgroundColor = .purple
+        view.addSubviews(buttonAlert)
+        viewModel?.setupConstraints(controller: self, button: buttonAlert)
     }
-    
-    private func makeMoreButton() {
-        let button = UIButton(frame: CGRect(x: 100, y: 300, width: 200, height: 50))
-        button.setTitle("One more time", for: .normal)
-        view.addSubview(button)
-        button.addTarget(self, action: #selector(tapAlert), for: .touchUpInside)
-    }
-    
-    @objc func tapAlert() {
-        
-        let vcAlert = UIAlertController(title: "Error", message: "You are wrong", preferredStyle: .alert)
-        let action = UIAlertAction(title: "Okay", style: .default) { actionTap in
-            print("OkAction")
-        }
-        let actionTwo = UIAlertAction(title: "Cancel", style: .cancel) { actionTap in
-            print("CancelAction")
-        }
-        vcAlert.addAction(action)
-        vcAlert.addAction(actionTwo)
-        present(vcAlert, animated: true, completion: nil)
+
+    func pressButton() {
+        viewModel?.presentAlert(controller: self)
     }
 }

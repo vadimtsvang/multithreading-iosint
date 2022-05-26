@@ -8,112 +8,119 @@
 import UIKit
 
 class PhotosTableViewCell: UITableViewCell {
-    
-    private var photos = PhotosVK.photosArray
 
-    let titlePhotos: UILabel = {
+    var labelPhotos: UILabel = {
         let label = UILabel()
-        label.text = "Photos"
-        label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        label.textAlignment = .left
         label.toAutoLayout()
+        label.text = "Photos"
+        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.textColor = .black
         return label
     }()
-   
-    let arrowRightPhotos: UIImageView = {
-       let image = UIImageView(image: UIImage(systemName: "arrow.right"))
-        image.tintColor = .black
-        image.toAutoLayout()
-        return image
-    }()
-    
-    let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.toAutoLayout()
-        return collectionView
-    }()
-    
-    let photosCollectionID = String(describing: PhotosCollectionViewCell.self)
 
-    private var baseInset: CGFloat { return 12 }
+    var arrowImage: UIImageView = {
+        let arrow = UIImageView()
+        arrow.toAutoLayout()
+        arrow.image = UIImage(systemName: "arrow.right")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        return arrow
+    }()
+
+    var stackViewImage: UIStackView = {
+        let stack = UIStackView()
+        stack.toAutoLayout()
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fillEqually
+        stack.spacing = 8
+        return stack
+    }()
+
+   lazy var previewImageOne: UIImageView = {
+        let preview = UIImageView()
+        preview.toAutoLayout()
+        preview.image = arrayPhotos[0]
+        preview.layer.cornerRadius = 6
+        preview.clipsToBounds = true
+        return preview
+    }()
+
+    lazy var previewImageTwo: UIImageView = {
+        let preview = UIImageView()
+        preview.toAutoLayout()
+        preview.image = arrayPhotos[1]
+        preview.layer.cornerRadius = 6
+        preview.clipsToBounds = true
+        return preview
+    }()
+
+    lazy var previewImageThree: UIImageView = {
+        let preview = UIImageView()
+        preview.toAutoLayout()
+        preview.image = arrayPhotos[2]
+        preview.layer.cornerRadius = 6
+        preview.clipsToBounds = true
+        return preview
+    }()
+
+    lazy var previewImageFour: UIImageView = {
+        let preview = UIImageView()
+        preview.toAutoLayout()
+        preview.image = arrayPhotos[3]
+        preview.layer.cornerRadius = 6
+        preview.clipsToBounds = true
+        return preview
+    }()
+
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+
+            labelPhotos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.indentTwelve),
+            labelPhotos.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.indentTwelve),
+
+            arrowImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.indentTwelve),
+            arrowImage.centerYAnchor.constraint(equalTo: labelPhotos.centerYAnchor),
+            arrowImage.heightAnchor.constraint(equalToConstant: 40),
+            arrowImage.widthAnchor.constraint(equalToConstant: 40),
+
+            stackViewImage.topAnchor.constraint(equalTo: labelPhotos.bottomAnchor, constant: Constants.indentTwelve),
+            stackViewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.indentTwelve),
+            stackViewImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.indentTwelve),
+            stackViewImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.indentTwelve),
+
+            previewImageOne.widthAnchor.constraint(greaterThanOrEqualToConstant: (contentView.frame.width - 24) / 4),
+            previewImageOne.heightAnchor.constraint(equalTo: previewImageOne.widthAnchor),
+
+            previewImageTwo.widthAnchor.constraint(greaterThanOrEqualToConstant: (contentView.frame.width - 24) / 4),
+            previewImageTwo.heightAnchor.constraint(equalTo: previewImageTwo.widthAnchor),
+
+            previewImageThree.widthAnchor.constraint(greaterThanOrEqualToConstant: (contentView.frame.width - 24) / 4),
+            previewImageThree.heightAnchor.constraint(equalTo: previewImageThree.widthAnchor),
+
+            previewImageFour.widthAnchor.constraint(greaterThanOrEqualToConstant: (contentView.frame.width - 24) / 4),
+            previewImageFour.heightAnchor.constraint(equalTo: previewImageFour.widthAnchor),
+        ])
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
+        super.init(style: style, reuseIdentifier:   reuseIdentifier)
+        self.toAutoLayout()
+        contentView.addSubviews(labelPhotos, arrowImage, stackViewImage)
+        stackViewImage.addArrangedSubview(previewImageOne)
+        stackViewImage.addArrangedSubview(previewImageTwo)
+        stackViewImage.addArrangedSubview(previewImageThree)
+        stackViewImage.addArrangedSubview(previewImageFour)
         setupConstraints()
     }
-    
+
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupViews()
-        setupConstraints()
+        fatalError("init(coder:) has not been implemented")
     }
-}
 
-extension PhotosTableViewCell {
-    private func setupViews() {
-        
-        [titlePhotos, arrowRightPhotos, collectionView].forEach {contentView.addSubview($0)}
-        
-        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: photosCollectionID)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.backgroundColor = .white
+    override func awakeFromNib() {
+        super.awakeFromNib()
     }
-}
 
-extension PhotosTableViewCell {
-    private func setupConstraints() {
-        [
-            titlePhotos.topAnchor.constraint(equalTo: contentView.topAnchor, constant: baseInset),
-            titlePhotos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: baseInset),
-            titlePhotos.trailingAnchor.constraint(equalTo: arrowRightPhotos.leadingAnchor, constant: -baseInset),
-
-            arrowRightPhotos.centerYAnchor.constraint(equalTo: titlePhotos.centerYAnchor),
-            arrowRightPhotos.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -baseInset),
-            arrowRightPhotos.heightAnchor.constraint(equalToConstant: 25),
-            arrowRightPhotos.widthAnchor.constraint(equalTo: arrowRightPhotos.heightAnchor),
-            
-            collectionView.topAnchor.constraint(equalTo: titlePhotos.bottomAnchor, constant: baseInset),
-            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 100)
-        ]
-        .forEach {$0.isActive = true}
-    }
-}
-
-extension PhotosTableViewCell: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 8
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: PhotosCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: photosCollectionID, for: indexPath) as! PhotosCollectionViewCell
-        cell.imagesPhotos.image = photos[indexPath.item]
-        cell.imagesPhotos.layer.cornerRadius = 6
-        return cell
-    }
-}
-
-extension PhotosTableViewCell: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt IndexPath: IndexPath) -> CGSize {
-        let width: CGFloat
-        let height: CGFloat
-        width = (collectionView.frame.width - baseInset * 2 - 8 * 3)/4
-        height = collectionView.frame.height - baseInset * 2
-        return CGSize(width: width, height: height)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: baseInset, bottom: baseInset, right: baseInset)
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
     }
 }

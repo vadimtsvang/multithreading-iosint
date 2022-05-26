@@ -8,38 +8,33 @@
 import UIKit
 
 class PhotosCollectionViewCell: UICollectionViewCell {
-    
-    var imagesPhotos: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+
+    var photos: UIImageView = {
+        let photos = UIImageView()
+        photos.toAutoLayout()
+        return photos
     }()
 
-    override func layoutSubviews() {
-            super.layoutSubviews()
+    public func configCellCollection(photo: UIImage) {
+        self.photos.image = photo
+    }
 
-        setupViews()
+    private func setupConstraints() {
+        self.contentView.addSubview(photos)
+        NSLayoutConstraint.activate([
+            photos.topAnchor.constraint(equalTo: contentView.topAnchor),
+            photos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            photos.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            photos.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupConstraints()
     }
-}
 
-extension PhotosCollectionViewCell {
-    private func setupViews() {
-
-        contentView.addSubview(imagesPhotos)
-    }
-}
-
-extension PhotosCollectionViewCell {
-    private func setupConstraints() {
-        [
-            imagesPhotos.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imagesPhotos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imagesPhotos.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imagesPhotos.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ]
-        .forEach {$0.isActive = true}
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

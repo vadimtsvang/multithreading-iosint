@@ -8,225 +8,118 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-    
-    let userService: UserService
-    let userName: String
-    
-    init(userService: UserService, userName: String) {
-        self.userService = userService
-        self.userName = userName
+
+    private let coordinator: ProfileCoordinator?
+
+    private let viewModel: ProfileViewModelProtocol?
+
+    init(coordinator: ProfileCoordinator?,
+         viewModel: ProfileViewModelProtocol?) {
+        self.coordinator = coordinator
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.toAutoLayout()
-        return tableView
+    static var postTableView: UITableView = {
+        let postTableView = UITableView(frame: .zero, style: .grouped)
+        postTableView.toAutoLayout()
+        postTableView.register(PostTableViewCell.self, forCellReuseIdentifier: String(describing: PostTableViewCell.self))
+        postTableView.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: String(describing: ProfileHeaderView.self))
+        postTableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: String(describing: PhotosTableViewCell.self))
+        postTableView.separatorInset = .zero
+
+        return postTableView
     }()
-    
-    private let profileHeaderView = ProfileHeaderView()
-    //private var posts = [PostVK]()
-    let postID = String(describing: PostTableViewCell.self)
-    let photosID = String(describing: PhotosTableViewCell.self)
-    private var arrayOFPosts = PostsVK().postsArray
-    
-    let closeButton: UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage (systemName: "xmark.circle.fill"), for: .normal)
-        button.tintColor = .lightGray
-        button.alpha = 0
-        button.addTarget(self, action: #selector(tapOnСloseButton), for: .touchUpInside)
-        button.toAutoLayout()
-        return button
-    }()
-    
+
+    private func setupConstaintTableView() {
+        NSLayoutConstraint.activate([
+            ProfileViewController.postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            ProfileViewController.postTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            ProfileViewController.postTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            ProfileViewController.postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Profile"
-        
-        #if DEBUG
-        profileHeaderView.backgroundColor = .yellow
-        #else
-        profileHeaderView.backgroundColor = .white
-        #endif
-        setupViews()
-        setupConstraints()
-        setupHideKeyboardOnTap()
-        
-        let tapOnAvatar = UITapGestureRecognizer(target: self, action: #selector(avatarOnTap))
-        profileHeaderView.avatarImageView.isUserInteractionEnabled = true
-        profileHeaderView.avatarImageView.addGestureRecognizer(tapOnAvatar)
-        
-        setupViewCloseButton()
-        setupCloseButtonConstraints()
-        showUser()
+        self.title = "Profile"
+        view.backgroundColor = .systemGray6
+        view.addSubviews(ProfileViewController.postTableView)
+        setupConstaintTableView()
+        ProfileViewController.postTableView.dataSource = self
+        ProfileViewController.postTableView.delegate = self
+        ProfileViewController.postTableView.refreshControl = UIRefreshControl()
+        ProfileViewController.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
     }
-    
-    private func configureUI() {
-        view.backgroundColor = .lightGray
-        view.addSubviews(profileHeaderView, tableView)
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
     }
-    
-    @objc func buttonClicked() {
-        //      print(statusTextField.text ?? "No text")
+
+    @objc func reloadTableView() {
+        ProfileViewController.postTableView.reloadData()
+        ProfileViewController.postTableView.refreshControl?.endRefreshing()
     }
+
 }
 
-extension ProfileViewController {
-    private func setupViews() {
-        
-        view.addSubview(tableView)
-        
-        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: postID)
-        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: photosID)
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-    }
-}
+extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 
-extension ProfileViewController {
-    private func showUser() {
-        if let user = userService.addUser(userName: userName) {
-            profileHeaderView.fullNameLabel.text = user.userName
-            profileHeaderView.statusLabel.text = user.userStatus
-            profileHeaderView.avatarImageView.image = user.userAvatar
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 1 {
+            return viewModel?.numberOfRows() ?? 0
+        } else {
+            return 1
         }
     }
-}
 
-extension ProfileViewController {
-    private func setupConstraints() {
-        [
-            profileHeaderView.heightAnchor.constraint(equalToConstant: 220),
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ]
-        .forEach {$0.isActive = true}
-    }
-}
-
-extension ProfileViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrayOFPosts.count + 1
+        return 2
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 {
-            let cell: PhotosTableViewCell = tableView.dequeueReusableCell(withIdentifier: photosID, for: indexPath) as! PhotosTableViewCell
-            return cell
-        } else {
-            let cell: PostTableViewCell = tableView.dequeueReusableCell(withIdentifier: postID, for: indexPath) as! PostTableViewCell
-        cell.post = arrayOFPosts[indexPath.row - 1]
-            return cell
-        }
-    }
-}
 
-extension ProfileViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-            let photosVC = PhotosViewController()
-            navigationController?.pushViewController(photosVC, animated: true)
-            tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 1 {
+            let cell = ProfileViewController.postTableView.dequeueReusableCell(withIdentifier: String(describing: PostTableViewCell.self), for: indexPath) as? PostTableViewCell
+            guard let tableViewCell = cell, let viewModel = viewModel else { return UITableViewCell() }
+            let cellViewModel = viewModel.cellViewModel(forIndexPath: indexPath)
+            tableViewCell.viewModel = cellViewModel
+            
+            return tableViewCell
+
         } else {
-            tableView.deselectRow(at: indexPath, animated: true)
+            let cell = ProfileViewController.postTableView.dequeueReusableCell(withIdentifier: String(describing: PhotosTableViewCell.self), for: indexPath) as! PhotosTableViewCell
+            return cell
         }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            guard section == 0 else { return nil }
-            return profileHeaderView
-    }
-}
 
-extension ProfileViewController {
-    func setupHideKeyboardOnTap() {
-        view.addGestureRecognizer(self.endEditingRecognizer())
-        navigationController?.navigationBar.addGestureRecognizer(self.endEditingRecognizer())
+        guard section == 0 else { return nil }
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: String(describing: ProfileHeaderView.self)) as! ProfileHeaderView
+        return headerView
     }
 
-    private func endEditingRecognizer() -> UIGestureRecognizer {
-        let tap = UITapGestureRecognizer(target: self.view, action: #selector(self.view.endEditing(_:)))
-        tap.cancelsTouchesInView = false
-        return tap
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 220
+        } else {
+            return 0
+        }
     }
-}
 
-extension ProfileViewController {
-    func setupViewCloseButton() {
-        view.addSubview(closeButton)
-    }
-}
-
-extension ProfileViewController {
-    func setupCloseButtonConstraints() {
-        [
-            closeButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            closeButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
-            closeButton.widthAnchor.constraint(equalToConstant: 25),
-            closeButton.heightAnchor.constraint(equalToConstant: 25)
-        ]
-        .forEach {$0.isActive = true}
-    }
-}
-
-private let originalTransform = ProfileHeaderView().avatarImageView.transform
-
-extension ProfileViewController {
-    @objc func avatarOnTap() {
-        UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: [.calculationModeCubicPaced], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
-               
-               self.tableView.isScrollEnabled = false
-               self.tableView.allowsSelection = false
-
-               self.profileHeaderView.avatarImageView.center = self.view.center
-               let scaleFactor = self.view.bounds.width / self.profileHeaderView.avatarImageView.bounds.width
-               self.profileHeaderView.avatarImageView.transform = self.profileHeaderView.avatarImageView.transform.scaledBy(x: scaleFactor, y: scaleFactor)
-               self.profileHeaderView.avatarImageView.layer.borderWidth = 0
-               self.profileHeaderView.avatarImageView.layer.cornerRadius = 0
-               
-               self.profileHeaderView.animationView.transform = CGAffineTransform(scaleX: 1, y: 1)
-               self.profileHeaderView.animationView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-               self.profileHeaderView.animationView.alpha = 0.75
-            }
-           UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.2) {
-               self.closeButton.alpha = 1
-           }
-        })
-    }
-}
-
-extension ProfileViewController {
-    @objc func tapOnСloseButton() {
-        UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: [.calculationModeCubicPaced], animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
-                self.closeButton.alpha = 0
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.2) {
-                self.profileHeaderView.avatarImageView.transform = originalTransform
-                self.profileHeaderView.avatarImageView.frame = CGRect(x: 16, y: 16, width: 110, height: 110)
-                self.profileHeaderView.avatarImageView.layer.cornerRadius = 45
-                self.profileHeaderView.avatarImageView.layer.borderWidth = 3
-                
-                self.profileHeaderView.animationView.frame = CGRect(x: 16, y: 16, width: 110, height: 110)
-                self.profileHeaderView.animationView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                self.profileHeaderView.animationView.alpha = 0
-                
-                self.tableView.allowsSelection = true
-                self.tableView.isScrollEnabled = true
-            }
-        })
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            tableView.deselectRow(at: indexPath, animated: false)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: false)
+            let photosViewController = PhotosViewController()
+            navigationController?.pushViewController(photosViewController, animated: true)
+        }
     }
 }

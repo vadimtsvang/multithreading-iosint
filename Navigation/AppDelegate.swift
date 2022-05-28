@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let coordinator: GeneralCoordinator = RootCoordinator()
 
         appendArrayPhotos()
-        self.window?.rootViewController = coordinator.startApplication()
+        self.window?.rootViewController = coordinator.startApplication(userData: nil)
 
         return true
     }

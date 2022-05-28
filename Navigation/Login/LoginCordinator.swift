@@ -6,14 +6,12 @@
 //
 
 import Foundation
-
-import Foundation
 import UIKit
 
-final class LoginCoordinator {
-
-    func showModel(coordinator: LoginCoordinator) -> UIViewController {
-        let profile = LogInViewController()
-        return profile
-    }
-}
+//final class LoginCoordinator {
+//
+//    func showModel(coordinator: LoginCoordinator) -> UIViewController {
+//        let profile = LogInViewController()
+//        return profile
+//    }
+//}

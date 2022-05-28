@@ -11,18 +11,18 @@ import UIKit
 protocol FeedViewModelProtocol: AnyObject {
 
     func setupConstraints(controller: UIViewController, stackView: UIStackView, labelPasswordCheck: UILabel)
-    func notify(controller: UINavigationController)
+    //func notify(controller: UINavigationController)
 }
 
 final class FeedViewModel: FeedViewModelProtocol {
 
     var callback: (() -> ())?
 
-    func notify(controller: UINavigationController) {
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(examinationPasswordTrue), name: Notification.Name("true"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(examinationPasswordFalse), name: Notification.Name("false"), object: nil)
-    }
+//    func notify(controller: UINavigationController) {
+//
+//        NotificationCenter.default.addObserver(self, selector: #selector(examinationPasswordTrue), name: Notification.Name("true"), object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(examinationPasswordFalse), name: Notification.Name("false"), object: nil)
+//    }
 
     func setupConstraints(controller: UIViewController, stackView: UIStackView, labelPasswordCheck: UILabel) {
         NSLayoutConstraint.activate([
@@ -36,9 +36,9 @@ final class FeedViewModel: FeedViewModelProtocol {
         ])
     }
 
-    @objc func examinationPasswordTrue() {
-    }
-
-    @objc func examinationPasswordFalse() {
-    }
+//    @objc func examinationPasswordTrue() {
+//    }
+//
+//    @objc func examinationPasswordFalse() {
+//    }
 }

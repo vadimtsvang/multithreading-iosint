@@ -6,8 +6,14 @@
 //
 
 import UIKit
+import iOSIntPackage
 
 class PhotosViewController: UIViewController {
+    
+    let processor = ImageProcessor()
+    var newPhotosArray: [UIImage] = []
+    var timer: Timer?
+    var counter: Double = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +22,41 @@ class PhotosViewController: UIViewController {
         self.photosCollectionView.dataSource = self
         self.photosCollectionView.delegate = self
         setupConstraints()
+        
+        processor.processImagesOnThread(sourceImages: arrayPhotos,
+                                        filter: .allCases.randomElement()!,
+                                        qos: .default) { filtres in
+            self.newPhotosArray.removeAll()
+            for value in filtres {
+                guard let value = value else { return }
+                self.newPhotosArray.append(UIImage(cgImage: value))
+            }
+            DispatchQueue.main.async {
+                self.photosCollectionView.reloadData()
+            }
+        }
+
+        timer = Timer.scheduledTimer(timeInterval: 0.05,
+                                     target: self,
+                                     selector: #selector(startTimer),
+                                     userInfo: nil,
+                                     repeats: true)
     }
+    
+    @objc func startTimer() {
+        counter += 0.05
+        if !newPhotosArray.isEmpty {
+            print("Время - \(counter)")
+            timer?.invalidate()
+        }
+    }
+    
+    //Время исполнения для каждого вызова метода processImagesOnThread с разной комбинацией параметров:
+    //utility - 4.749999999999991
+    //userInteractive - 5.599999999999988
+    //default - 4.6499999999999915
+    //background - 5.649999999999988
+    //userInitiated - 6.849999999999984
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

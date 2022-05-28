@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F83F7B328411F9D003215F6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7B228411F9D003215F6 /* User.swift */; };
+		1F83F7B528411FC0003215F6 /* CurrentUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7B428411FC0003215F6 /* CurrentUserService.swift */; };
+		1F83F7B728412031003215F6 /* TestUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7B628412031003215F6 /* TestUserService.swift */; };
+		1F83F7B9284122EC003215F6 /* LoginInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7B8284122EC003215F6 /* LoginInspector.swift */; };
+		1F83F7BB28412329003215F6 /* LoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7BA28412329003215F6 /* LoginFactory.swift */; };
+		1F83F7BD2841234D003215F6 /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7BC2841234D003215F6 /* Checker.swift */; };
+		1F83F7C028412D14003215F6 /* iOSIntPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 1F83F7BF28412D14003215F6 /* iOSIntPackage */; };
 		DB2C7CE5282FCB420044AC30 /* GeneralCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C7CE4282FCB420044AC30 /* GeneralCoordinator.swift */; };
 		DB2C7CE8282FCBA90044AC30 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C7CE7282FCBA90044AC30 /* MainTabBarController.swift */; };
 		DB2C7CEC282FD1640044AC30 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C7CEB282FD1640044AC30 /* ProfileCoordinator.swift */; };
@@ -44,6 +51,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F83F7B228411F9D003215F6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		1F83F7B428411FC0003215F6 /* CurrentUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserService.swift; sourceTree = "<group>"; };
+		1F83F7B628412031003215F6 /* TestUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUserService.swift; sourceTree = "<group>"; };
+		1F83F7B8284122EC003215F6 /* LoginInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInspector.swift; sourceTree = "<group>"; };
+		1F83F7BA28412329003215F6 /* LoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFactory.swift; sourceTree = "<group>"; };
+		1F83F7BC2841234D003215F6 /* Checker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checker.swift; sourceTree = "<group>"; };
 		DB2C7CE4282FCB420044AC30 /* GeneralCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralCoordinator.swift; sourceTree = "<group>"; };
 		DB2C7CE7282FCBA90044AC30 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		DB2C7CEB282FD1640044AC30 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
@@ -87,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F83F7C028412D14003215F6 /* iOSIntPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,11 +110,21 @@
 		1F3D70FD283E7D630073F622 /* Photos */ = {
 			isa = PBXGroup;
 			children = (
-				DBBAECE727D6640000AA366E /* PhotosTableViewCell.swift */,
 				DBBAECE927D6641200AA366E /* PhotosViewController.swift */,
+				DBBAECE727D6640000AA366E /* PhotosTableViewCell.swift */,
 				DBBAECEB27D6642700AA366E /* PhotosCollectionViewCell.swift */,
 			);
 			path = Photos;
+			sourceTree = "<group>";
+		};
+		1F83F7B128411F61003215F6 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				1F83F7B228411F9D003215F6 /* User.swift */,
+				1F83F7B428411FC0003215F6 /* CurrentUserService.swift */,
+				1F83F7B628412031003215F6 /* TestUserService.swift */,
+			);
+			path = User;
 			sourceTree = "<group>";
 		};
 		DB0CE5EA28312983001BFDBC /* Post */ = {
@@ -155,6 +179,9 @@
 			children = (
 				DBBE367327D231E0006CD4FB /* LogInViewController.swift */,
 				DBA0E28428362679002C5077 /* LoginCordinator.swift */,
+				1F83F7B8284122EC003215F6 /* LoginInspector.swift */,
+				1F83F7BC2841234D003215F6 /* Checker.swift */,
+				1F83F7BA28412329003215F6 /* LoginFactory.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -231,6 +258,7 @@
 			children = (
 				DBBBD14227B82BC400900EE7 /* Info.plist */,
 				DBBBD13427B82BC200900EE7 /* AppDelegate.swift */,
+				1F83F7B128411F61003215F6 /* User */,
 				DB2C7CE3282FCAFB0044AC30 /* Coordinator */,
 				DB2C7CF82830C1E20044AC30 /* Factory */,
 				DBA0E24E28339692002C5077 /* Feed */,
@@ -263,6 +291,9 @@
 			dependencies = (
 			);
 			name = Navigation;
+			packageProductDependencies = (
+				1F83F7BF28412D14003215F6 /* iOSIntPackage */,
+			);
 			productName = Navigation;
 			productReference = DBBBD13127B82BC200900EE7 /* Navigation.app */;
 			productType = "com.apple.product-type.application";
@@ -291,6 +322,9 @@
 				Base,
 			);
 			mainGroup = DBBBD12827B82BC200900EE7;
+			packageReferences = (
+				1F83F7BE28412D14003215F6 /* XCRemoteSwiftPackageReference "iOSIntPackage" */,
+			);
 			productRefGroup = DBBBD13227B82BC200900EE7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -317,7 +351,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F83F7B528411FC0003215F6 /* CurrentUserService.swift in Sources */,
+				1F83F7BD2841234D003215F6 /* Checker.swift in Sources */,
 				DBBAECE827D6640000AA366E /* PhotosTableViewCell.swift in Sources */,
+				1F83F7BB28412329003215F6 /* LoginFactory.swift in Sources */,
 				DBBAECEA27D6641200AA366E /* PhotosViewController.swift in Sources */,
 				DBBE367627D23264006CD4FB /* PostTableViewCell.swift in Sources */,
 				DBBBD14D27B8CC3C00900EE7 /* PostViewController.swift in Sources */,
@@ -343,12 +380,15 @@
 				DBA0E2702834D774002C5077 /* PasswordModel.swift in Sources */,
 				DBBAECEC27D6642700AA366E /* PhotosCollectionViewCell.swift in Sources */,
 				DB2C7CEC282FD1640044AC30 /* ProfileCoordinator.swift in Sources */,
+				1F83F7B9284122EC003215F6 /* LoginInspector.swift in Sources */,
 				DBA0E27C2834E534002C5077 /* InfoViewModel.swift in Sources */,
+				1F83F7B728412031003215F6 /* TestUserService.swift in Sources */,
 				DBA0E2742834D797002C5077 /* PasswordTextField.swift in Sources */,
 				DBA0E25328339754002C5077 /* FeedViewModel.swift in Sources */,
 				DB2C7CFA2830C20E0044AC30 /* Factory.swift in Sources */,
 				DBA0E28528362679002C5077 /* LoginCordinator.swift in Sources */,
 				DBBAECE427D6618D00AA366E /* Extensions.swift in Sources */,
+				1F83F7B328411F9D003215F6 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,6 +600,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1F83F7BE28412D14003215F6 /* XCRemoteSwiftPackageReference "iOSIntPackage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TrueMax/iOSIntPackage.git";
+			requirement = {
+				kind = exactVersion;
+				version = 3.2.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1F83F7BF28412D14003215F6 /* iOSIntPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1F83F7BE28412D14003215F6 /* XCRemoteSwiftPackageReference "iOSIntPackage" */;
+			productName = iOSIntPackage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DBBBD12927B82BC200900EE7 /* Project object */;
 }

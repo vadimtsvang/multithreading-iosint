@@ -15,10 +15,10 @@ protocol PasswordTextFieldDelegate: AnyObject {
 
 class PasswordTextField: UITextField {
 
-    private weak var delegatTextField: PasswordTextFieldDelegate?
+    private weak var delegateTextField: PasswordTextFieldDelegate?
 
     init(delegateTextField: PasswordTextFieldDelegate?) {
-        self.delegatTextField = delegateTextField
+        self.delegateTextField = delegateTextField
         super.init(frame: .zero)
         self.toAutoLayout()
         self.textColor = .black
@@ -34,7 +34,7 @@ class PasswordTextField: UITextField {
     }
 
     @objc func editWord() {
-        delegatTextField?.enterPassword()
+        delegateTextField?.enterPassword()
     }
 }
 

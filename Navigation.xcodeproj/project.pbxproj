@@ -14,6 +14,7 @@
 		1F83F7BB28412329003215F6 /* LoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7BA28412329003215F6 /* LoginFactory.swift */; };
 		1F83F7BD2841234D003215F6 /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7BC2841234D003215F6 /* Checker.swift */; };
 		1F83F7C028412D14003215F6 /* iOSIntPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 1F83F7BF28412D14003215F6 /* iOSIntPackage */; };
+		1F83F7C22843D4F5003215F6 /* BruteForce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83F7C12843D4F5003215F6 /* BruteForce.swift */; };
 		DB2C7CE5282FCB420044AC30 /* GeneralCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C7CE4282FCB420044AC30 /* GeneralCoordinator.swift */; };
 		DB2C7CE8282FCBA90044AC30 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C7CE7282FCBA90044AC30 /* MainTabBarController.swift */; };
 		DB2C7CEC282FD1640044AC30 /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C7CEB282FD1640044AC30 /* ProfileCoordinator.swift */; };
@@ -57,6 +58,7 @@
 		1F83F7B8284122EC003215F6 /* LoginInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInspector.swift; sourceTree = "<group>"; };
 		1F83F7BA28412329003215F6 /* LoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFactory.swift; sourceTree = "<group>"; };
 		1F83F7BC2841234D003215F6 /* Checker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checker.swift; sourceTree = "<group>"; };
+		1F83F7C12843D4F5003215F6 /* BruteForce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BruteForce.swift; sourceTree = "<group>"; };
 		DB2C7CE4282FCB420044AC30 /* GeneralCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralCoordinator.swift; sourceTree = "<group>"; };
 		DB2C7CE7282FCBA90044AC30 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		DB2C7CEB282FD1640044AC30 /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				1F83F7B8284122EC003215F6 /* LoginInspector.swift */,
 				1F83F7BC2841234D003215F6 /* Checker.swift */,
 				1F83F7BA28412329003215F6 /* LoginFactory.swift */,
+				1F83F7C12843D4F5003215F6 /* BruteForce.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 				DB2C7CE8282FCBA90044AC30 /* MainTabBarController.swift in Sources */,
 				DB2C7CE5282FCB420044AC30 /* GeneralCoordinator.swift in Sources */,
 				DBA0E27E2834E721002C5077 /* InfoCustomModel.swift in Sources */,
+				1F83F7C22843D4F5003215F6 /* BruteForce.swift in Sources */,
 				DBBE367427D231E0006CD4FB /* LogInViewController.swift in Sources */,
 				DBA0E26E2834D752002C5077 /* CustomButton.swift in Sources */,
 				DBA0E27A2834DED5002C5077 /* InfoCoordinator.swift in Sources */,

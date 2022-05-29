@@ -9,9 +9,6 @@ import UIKit
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
     
-    //var isLogIn = false
-    //private var coordinator: LoginCoordinator?
-    
     var delegate: LoginViewControllerDelegate?
     var callback: (_ userData: (userService: UserServiceProtocol, userLogin: String)) -> Void
 
@@ -97,6 +94,30 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return loginButton
     }()
     
+    private lazy var bruteForceButton: UIButton = {
+        let button = UIButton()
+        if let image = UIImage(named: "blue_pixel") {
+            button.setBackgroundImage(image.image(alpha: 1), for: .normal)
+            button.setBackgroundImage(image.image(alpha: 0.8), for: .selected)
+            button.setBackgroundImage(image.image(alpha: 0.8), for: .highlighted)
+            button.setBackgroundImage(image.image(alpha: 0.8), for: .disabled)
+        }
+        button.setTitle("Подбор пароля", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.toAutoLayout()
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(bruteForceAction), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.isHidden = true
+        indicator.toAutoLayout()
+        return indicator
+    }()
+    
     init(callback: @escaping (_ userData: (userService: UserServiceProtocol, userLogin: String)) -> Void) {
         self.callback = callback
         super.init(nibName: nil, bundle: nil)
@@ -104,6 +125,31 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func bruteForceAction() {
+        let queue = DispatchQueue.global(qos: .userInteractive)
+        guard let login = loginTextField.text else { return }
+        guard login != "" else {
+            let alert = UIAlertController(title: "Ошибка", message: "Подбор пароля для логина Corgi", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "ОК", style: .default)
+            alert.addAction(alertAction)
+            present(alert, animated: true)
+            return
+        }
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        queue.async {
+            let bruteForce = BruteForce(loginInspector: self.delegate, login: login) { [weak self] password in
+                DispatchQueue.main.async {
+                    self?.passwordTextField.text = password
+                    self?.passwordTextField.isSecureTextEntry = false
+                    self?.activityIndicator.stopAnimating()
+                    self?.activityIndicator.isHidden = true
+                }
+            }
+            bruteForce.bruteForce()
+        }
     }
 
     private func setupConstraints() {
@@ -127,14 +173,23 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             imageVK.widthAnchor.constraint(equalToConstant: 100),
 
             loginStackView.topAnchor.constraint(equalTo: imageVK.bottomAnchor, constant: 120),
-            loginStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingMargin),
-            loginStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingMargin),
+            loginStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            loginStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginStackView.heightAnchor.constraint(equalToConstant: 100),
 
-            loginButton.topAnchor.constraint(equalTo: loginStackView.bottomAnchor, constant: Constants.indent),
-            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingMargin),
-            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingMargin),
+            loginButton.topAnchor.constraint(equalTo: loginStackView.bottomAnchor, constant: 16),
+            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            bruteForceButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
+            bruteForceButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            bruteForceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            bruteForceButton.heightAnchor.constraint(equalToConstant: 50),
+
+            activityIndicator.bottomAnchor.constraint(equalTo: loginStackView.bottomAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: loginStackView.centerXAnchor),
+            activityIndicator.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
 
@@ -142,7 +197,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = .white
         view.addSubview(loginScrollView)
         loginScrollView.addSubview(contentView)
-        contentView.addSubviews(imageVK, loginStackView, loginButton)
+        contentView.addSubviews(imageVK, loginStackView, loginButton, bruteForceButton, activityIndicator)
         loginStackView.addArrangedSubview(loginTextField)
         loginStackView.addArrangedSubview(passwordTextField)
         setupConstraints()
@@ -192,7 +247,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             self.present(alert, animated: true)
         }
     }
-
 
     @objc private func tap() {
         loginTextField.resignFirstResponder()

@@ -36,7 +36,7 @@ class PhotosViewController: UIViewController {
             }
         }
 
-        timer = Timer.scheduledTimer(timeInterval: 0.05,
+        timer = Timer.scheduledTimer(timeInterval: 0.5,
                                      target: self,
                                      selector: #selector(startTimer),
                                      userInfo: nil,

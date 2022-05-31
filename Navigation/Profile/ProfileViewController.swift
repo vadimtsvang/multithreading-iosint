@@ -13,6 +13,11 @@ class ProfileViewController: UIViewController {
     var userLogin: String
     private let coordinator: ProfileCoordinator?
     private let viewModel: ProfileViewModelProtocol?
+    var timeSeconds = 11 {
+        didSet {
+            ProfileHeaderView.timerLabel.text = String(timeSeconds)
+        }
+    }
     
     init(coordinator: ProfileCoordinator?,
          viewModel: ProfileViewModelProtocol?,
@@ -37,7 +42,6 @@ class ProfileViewController: UIViewController {
         postTableView.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: String(describing: ProfileHeaderView.self))
         postTableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: String(describing: PhotosTableViewCell.self))
         postTableView.separatorInset = .zero
-        
         return postTableView
     }()
     
@@ -60,6 +64,7 @@ class ProfileViewController: UIViewController {
         ProfileViewController.postTableView.delegate = self
         ProfileViewController.postTableView.refreshControl = UIRefreshControl()
         ProfileViewController.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
+        timer()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,6 +77,32 @@ class ProfileViewController: UIViewController {
         ProfileViewController.postTableView.refreshControl?.endRefreshing()
     }
     
+    func timer() {
+        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            self.timeSeconds -= 1
+            if self.timeSeconds == 0 {
+                timer.invalidate()
+                ProfileHeaderView.timerLabel.isHidden = true
+            }
+        }
+    }
+    
+    func reload() {
+        var timerSecond = 11
+        DispatchQueue.global(qos: .utility).async {
+            let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                timerSecond -= 1
+                if timerSecond == 0 {
+                    DispatchQueue.main.async {
+                        ProfileViewController.postTableView.reloadData()
+                    }
+                }
+            }
+            RunLoop.current.add(timer, forMode: .common)
+            RunLoop.current.run()
+        }
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
@@ -108,6 +139,9 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         
         guard section == 0 else { return nil }
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: String(describing: ProfileHeaderView.self)) as! ProfileHeaderView
+        if let user = userService.getUser(login: userLogin) {
+            headerView.currentUser(user: user)
+        }
         return headerView
     }
     
@@ -127,5 +161,6 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             let photosViewController = PhotosViewController()
             navigationController?.pushViewController(photosViewController, animated: true)
         }
+        reload()
     }
 }

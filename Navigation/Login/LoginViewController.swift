@@ -11,26 +11,26 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     var delegate: LoginViewControllerDelegate?
     var callback: (_ userData: (userService: UserServiceProtocol, userLogin: String)) -> Void
-
+    
     private lazy var loginScrollView: UIScrollView = {
         let loginScrollView = UIScrollView()
         loginScrollView.toAutoLayout()
         return loginScrollView
     }()
-
+    
     private lazy var contentView: UIView = {
         let contentView = UIView()
         contentView.toAutoLayout()
         return contentView
     }()
-
+    
     private lazy var imageVK: UIImageView = {
         let imageVK = UIImageView()
         imageVK.image = UIImage(named: "logo")
         imageVK.toAutoLayout()
         return imageVK
     }()
-
+    
     private lazy var loginStackView: UIStackView = {
         let stack = UIStackView()
         stack.toAutoLayout()
@@ -43,7 +43,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         stack.clipsToBounds = true
         return stack
     }()
-
+    
     private lazy var loginTextField: UITextField = {
         let login = UITextField()
         login.toAutoLayout()
@@ -59,7 +59,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         login.returnKeyType = .done
         return login
     }()
-
+    
     private lazy var passwordTextField: UITextField = {
         let password = UITextField()
         password.toAutoLayout()
@@ -75,7 +75,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         password.returnKeyType = .done
         return password
     }()
-
+    
     private lazy var loginButton: UIButton = {
         let loginButton = UIButton()
         loginButton.toAutoLayout()
@@ -85,7 +85,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             loginButton.setBackgroundImage(image.image(alpha: 0.8), for: .highlighted)
             loginButton.setBackgroundImage(image.image(alpha: 0.8), for: .disabled)
         }
-
+        
         loginButton.setTitle("Log In", for: .normal)
         loginButton.setTitleColor(.white, for: .normal)
         loginButton.addTarget(self, action: #selector(pressLogIn), for: .touchUpInside)
@@ -110,7 +110,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         button.addTarget(self, action: #selector(bruteForceAction), for: .touchUpInside)
         return button
     }()
-
+    
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.isHidden = true
@@ -151,32 +151,32 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             bruteForce.bruteForce()
         }
     }
-
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-
+            
             loginScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             loginScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             loginScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             loginScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
+            
             contentView.topAnchor.constraint(equalTo: loginScrollView.topAnchor),
             contentView.trailingAnchor.constraint(equalTo: loginScrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: loginScrollView.bottomAnchor),
             contentView.leadingAnchor.constraint(equalTo: loginScrollView.leadingAnchor),
             contentView.centerXAnchor.constraint(equalTo: loginScrollView.centerXAnchor),
             contentView.centerYAnchor.constraint(equalTo: loginScrollView.centerYAnchor),
-
+            
             imageVK.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120),
             imageVK.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             imageVK.heightAnchor.constraint(equalToConstant: 100),
             imageVK.widthAnchor.constraint(equalToConstant: 100),
-
+            
             loginStackView.topAnchor.constraint(equalTo: imageVK.bottomAnchor, constant: 120),
             loginStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             loginStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginStackView.heightAnchor.constraint(equalToConstant: 100),
-
+            
             loginButton.topAnchor.constraint(equalTo: loginStackView.bottomAnchor, constant: 16),
             loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -186,13 +186,13 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             bruteForceButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             bruteForceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             bruteForceButton.heightAnchor.constraint(equalToConstant: 50),
-
+            
             activityIndicator.bottomAnchor.constraint(equalTo: loginStackView.bottomAnchor),
             activityIndicator.centerXAnchor.constraint(equalTo: loginStackView.centerXAnchor),
             activityIndicator.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
-
+    
     private func setupViews() {
         view.backgroundColor = .white
         view.addSubview(loginScrollView)
@@ -202,7 +202,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         loginStackView.addArrangedSubview(passwordTextField)
         setupConstraints()
     }
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         loginTextField.becomeFirstResponder()
         loginTextField.resignFirstResponder()
@@ -210,49 +210,86 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.resignFirstResponder()
         return true;
     }
-
+    
     @objc private func pressLogIn() {
         
         guard let delegate = delegate else { return }
         guard let login = loginTextField.text else { return }
         guard let password = passwordTextField.text else { return }
-
-        if login.isEmpty {
-            let alertVC = UIAlertController(title: "Ошибка", message: "Введите логин", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "ОК", style: .default)
-            alertVC.addAction(alertAction)
-            self.present(alertVC, animated: true)
-            return
-        }
-        if password.isEmpty {
-            let alertVC = UIAlertController(title: "Ошибка", message: "Введите пароль", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "ОК", style: .default)
-            alertVC.addAction(alertAction)
-            self.present(alertVC, animated: true)
-            return
-        }
-
-        let isRight = delegate.check(login: login, password: password)
-        if isRight {
-            #if DEBUG
-            let userService = CurrentUserService()
-            #else
-            let userService = TestUserService()
-            #endif
-            self.callback((userService: userService, userLogin: login))
-        } else {
-            let alert = UIAlertController(title: "Внимание", message: "Введен неверный логин или пароль!", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "ОК", style: .default)
-            alert.addAction(alertAction)
-            self.present(alert, animated: true)
+        
+        DispatchQueue.global().async {
+            self.authorization(delegate: delegate,
+                               login: login,
+                               password: password) { result in
+                switch result {
+                case .success(true):
+                    DispatchQueue.main.async {
+                        let userService = CurrentUserService()
+                        self.callback((userService: userService, userLogin: login))
+                    }
+                case .failure(.noLogin):
+                    DispatchQueue.main.async {
+                        let alertVC = UIAlertController(title: "Ошибка", message: "Введите логин", preferredStyle: .alert)
+                        let alertAction = UIAlertAction(title: "ОК", style: .default)
+                        alertVC.addAction(alertAction)
+                        self.present(alertVC, animated: true)
+                    }
+                case .failure(.noPassword):
+                    DispatchQueue.main.async {
+                        let alertVC = UIAlertController(title: "Ошибка", message: "Введите пароль", preferredStyle: .alert)
+                        let alertAction = UIAlertAction(title: "ОК", style: .default)
+                        alertVC.addAction(alertAction)
+                        self.present(alertVC, animated: true)
+                    }
+                case .failure(.wrongDate):
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "Ошибка", message: "Введен неверный логин или пароль", preferredStyle: .alert)
+                        let alertAction = UIAlertAction(title: "ОК", style: .default)
+                        alert.addAction(alertAction)
+                        self.present(alert, animated: true)
+                    }
+                default :
+                    break
+                }
+            }
         }
     }
-
+    
+    //        if login.isEmpty {
+    //            let alertVC = UIAlertController(title: "Ошибка", message: "Введите логин", preferredStyle: .alert)
+    //            let alertAction = UIAlertAction(title: "ОК", style: .default)
+    //            alertVC.addAction(alertAction)
+    //            self.present(alertVC, animated: true)
+    //            return
+    //        }
+    //        if password.isEmpty {
+    //            let alertVC = UIAlertController(title: "Ошибка", message: "Введите пароль", preferredStyle: .alert)
+    //            let alertAction = UIAlertAction(title: "ОК", style: .default)
+    //            alertVC.addAction(alertAction)
+    //            self.present(alertVC, animated: true)
+    //            return
+    //        }
+    //
+    //        let isRight = delegate.check(login: login, password: password)
+    //        if isRight {
+    //            #if DEBUG
+    //            let userService = CurrentUserService()
+    //            #else
+    //            let userService = TestUserService()
+    //            #endif
+    //            self.callback((userService: userService, userLogin: login))
+    //        } else {
+    //            let alert = UIAlertController(title: "Ошибка", message: "Введен неверный логин или пароль!", preferredStyle: .alert)
+    //            let alertAction = UIAlertAction(title: "ОК", style: .default)
+    //            alert.addAction(alertAction)
+    //            self.present(alert, animated: true)
+    //        }
+    
     @objc private func tap() {
         loginTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupViews()
@@ -261,33 +298,54 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tap))
         view.addGestureRecognizer(tapGesture)
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let nc = NotificationCenter.default
         nc.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         nc.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         let nc = NotificationCenter.default
         nc.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         nc.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     @objc private func keyboardShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             loginScrollView.contentOffset.y = keyboardSize.height - (loginScrollView.frame.height - loginButton.frame.minY)
             loginScrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-
+            
             print(keyboardSize.height)
             print(loginScrollView.frame.height - loginButton.frame.minY)
             print(loginScrollView.contentOffset.y)
         }
     }
-
+    
     @objc private func keyboardHide(notification: NSNotification) {
         loginScrollView.contentOffset = CGPoint(x: 0, y: 0)
+    }
+}
+
+extension LogInViewController {
+    private func authorization(delegate: LoginViewControllerDelegate?,
+                               login: String,
+                               password: String,
+                               completion: (Result<Bool, AuthorizationErrors>) -> Void) {
+        guard let delegate = delegate else { return }
+        let isRight = delegate.check(login: login, password: password)
+        if login.isEmpty {
+            completion(.failure(.noLogin))
+        }
+        if password.isEmpty {
+            completion(.failure(.noPassword))
+        }
+        if isRight{
+            completion(.success(true))
+        } else {
+            completion(.failure(.wrongDate))
+        }
     }
 }

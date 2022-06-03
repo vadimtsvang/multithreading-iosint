@@ -27,7 +27,7 @@ class ProfileViewController: UIViewController {
         self.viewModel = viewModel
         self.userService = userService
         self.userLogin = userLogin
-    
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -78,29 +78,14 @@ class ProfileViewController: UIViewController {
     }
     
     func timer() {
-        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.timeSeconds -= 1
             if self.timeSeconds == 0 {
                 timer.invalidate()
                 ProfileHeaderView.timerLabel.isHidden = true
+                ProfileViewController.postTableView.reloadData()
             }
-        }
-    }
-    
-    func reload() {
-        var timerSecond = 11
-        DispatchQueue.global(qos: .utility).async {
-            let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-                timerSecond -= 1
-                if timerSecond == 0 {
-                    DispatchQueue.main.async {
-                        ProfileViewController.postTableView.reloadData()
-                    }
-                }
-            }
-            RunLoop.current.add(timer, forMode: .common)
-            RunLoop.current.run()
         }
     }
 }
@@ -109,7 +94,10 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 {
-            return viewModel?.numberOfRows() ?? 0
+            guard let count = try?viewModel?.numberOfRows() else {
+                preconditionFailure("Массив пустой")
+            }
+            return count
         } else {
             return 1
         }
@@ -161,6 +149,5 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             let photosViewController = PhotosViewController()
             navigationController?.pushViewController(photosViewController, animated: true)
         }
-        reload()
     }
 }

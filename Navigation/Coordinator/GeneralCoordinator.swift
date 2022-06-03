@@ -15,11 +15,10 @@ protocol GeneralCoordinator: AnyObject {
 
 protocol CoordinatorViewController: AnyObject {
     var navigationController: UINavigationController? { get set }
-    func Start() -> UINavigationController?
+    func Start() throws -> UINavigationController?
 }
 
 final class RootCoordinator: GeneralCoordinator {
-
     enum StateAuthorization {
         case authorized
         case notAuthorized

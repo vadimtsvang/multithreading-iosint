@@ -75,3 +75,9 @@ extension UITextField {
         self.leftViewMode = .always
     }
 }
+
+public enum AuthorizationErrors: Error {
+    case noLogin
+    case noPassword
+    case wrongDate
+}

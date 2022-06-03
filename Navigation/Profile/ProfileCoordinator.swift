@@ -19,11 +19,11 @@ final class ProfileCoordinator: CoordinatorViewController {
         self.userLogin = data.userLogin
     }
 
-    func Start() -> UINavigationController? {
+    func Start() throws -> UINavigationController? {
         let factory = Factory(state: .profile)
         guard let userService = userService,
               let userLogin = userLogin else {
-            return nil
+            throw AuthorizationErrors.wrongDate
         }
             navigationController = factory.startModule(coordinator: self, data: (userService: userService, userLogin: userLogin))
             return navigationController

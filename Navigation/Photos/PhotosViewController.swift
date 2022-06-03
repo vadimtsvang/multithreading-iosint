@@ -12,7 +12,6 @@ class PhotosViewController: UIViewController {
     
     let processor = ImageProcessor()
     var newPhotosArray: [UIImage] = []
-    var timer: Timer?
     var counter: Double = 0
 
     override func viewDidLoad() {
@@ -36,19 +35,6 @@ class PhotosViewController: UIViewController {
             }
         }
 
-        timer = Timer.scheduledTimer(timeInterval: 0.5,
-                                     target: self,
-                                     selector: #selector(startTimer),
-                                     userInfo: nil,
-                                     repeats: true)
-    }
-    
-    @objc func startTimer() {
-        counter += 0.05
-        if !newPhotosArray.isEmpty {
-            print("Время - \(counter)")
-            timer?.invalidate()
-        }
     }
     
     //Время исполнения для каждого вызова метода processImagesOnThread с разной комбинацией параметров:

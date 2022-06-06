@@ -112,28 +112,28 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
         NSLayoutConstraint.activate([
             avatar.widthAnchor.constraint(equalToConstant: 100),
             avatar.heightAnchor.constraint(equalTo: avatar.widthAnchor),
-            avatar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.leadingMargin),
-            avatar.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.indent),
+            avatar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            avatar.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
 
             userName.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: 20),
             userName.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
 
-            buttonStatus.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: Constants.indent),
-            buttonStatus.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.leadingMargin),
-            buttonStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: Constants.trailingMargin),
+            buttonStatus.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: 16),
+            buttonStatus.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            buttonStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             buttonStatus.heightAnchor.constraint(equalToConstant: 50),
 
             statusLabel.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: 20),
-            statusLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: Constants.trailingMargin),
+            statusLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.trailingAnchor, constant: -16),
             statusLabel.bottomAnchor.constraint(equalTo: textFieldStatus.topAnchor, constant: -6),
 
             textFieldStatus.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: 20),
-            textFieldStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: Constants.trailingMargin),
+            textFieldStatus.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             textFieldStatus.bottomAnchor.constraint(equalTo: buttonStatus.topAnchor, constant: -10),
             textFieldStatus.heightAnchor.constraint(equalToConstant: 40),
 
-            exitAvatarButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.indent),
-            exitAvatarButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingMargin),
+            exitAvatarButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            exitAvatarButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             exitAvatarButton.widthAnchor.constraint(equalToConstant: 40),
             exitAvatarButton.heightAnchor.constraint(equalTo: exitAvatarButton.widthAnchor),
             

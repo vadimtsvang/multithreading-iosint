@@ -13,33 +13,15 @@ final class Factory {
     enum State {
         case profile
         case feed
+        case audio
+        case video
     }
 
     let state: State
-    //let navigation: UINavigationController
 
     init(state: State) {
         self.state = state
-        //self.navigation = navigation
-        //startModule()
     }
-
-//    func startModule() {
-//        switch state {
-//        case .profile:
-//            let coordinator = LoginCoordinator()
-//            let controller = coordinator.showModel(coordinator: coordinator)
-//            navigation.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), selectedImage: UIImage(systemName: "person.crop.circle.fill"))
-//            navigation.setViewControllers([controller], animated: false)
-//
-//            ()
-//        case .feed:
-//            let coordinator = FeedCoordinator()
-//            let controller = coordinator.showModel(coordinator: coordinator)
-//            navigation.tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "note.text"), tag: 0)
-//            navigation.setViewControllers([controller], animated: false)
-//        }
-//    }
     
     func startModule(coordinator: CoordinatorViewController, data: (userService: UserServiceProtocol, userLogin: String)?) -> UINavigationController? {
         switch state {
@@ -58,6 +40,26 @@ final class Factory {
             let feedNC = UINavigationController(rootViewController: feedVC)
             feedNC.tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "note.text"), tag: 0)
             return feedNC
+            
+        case .audio:
+            let viewModel = AudioViewModel()
+            let audioVC = AudioViewController(coordinator: coordinator as? AudioCoordinator, viewModel: viewModel)
+            audioVC.view.backgroundColor = .systemPink
+            let audioNC = UINavigationController(rootViewController: audioVC)
+            audioNC.tabBarItem = UITabBarItem(title: "Music",
+                                              image: UIImage(systemName: "play"),
+                                              selectedImage: UIImage(systemName: "play.fill"))
+            return audioNC
+            
+        case .video:
+            let viewModel = VideoViewModel()
+            let videoVC = VideoViewController(coordinator: coordinator as? VideoCoordinator, viewModel: viewModel)
+            videoVC.view.backgroundColor = .systemBlue
+            let videoNC = UINavigationController(rootViewController: videoVC)
+            videoNC.tabBarItem = UITabBarItem(title: "Video",
+                                              image: UIImage(systemName: "tv"),
+                                              selectedImage: UIImage(systemName: "tv.fill"))
+            return videoNC
         }
     }
 }

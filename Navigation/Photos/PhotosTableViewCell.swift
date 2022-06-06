@@ -74,18 +74,18 @@ class PhotosTableViewCell: UITableViewCell {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
 
-            labelPhotos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.indentTwelve),
-            labelPhotos.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.indentTwelve),
+            labelPhotos.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            labelPhotos.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
 
-            arrowImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.indentTwelve),
+            arrowImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             arrowImage.centerYAnchor.constraint(equalTo: labelPhotos.centerYAnchor),
             arrowImage.heightAnchor.constraint(equalToConstant: 40),
             arrowImage.widthAnchor.constraint(equalToConstant: 40),
 
-            stackViewImage.topAnchor.constraint(equalTo: labelPhotos.bottomAnchor, constant: Constants.indentTwelve),
-            stackViewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.indentTwelve),
-            stackViewImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Constants.indentTwelve),
-            stackViewImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.indentTwelve),
+            stackViewImage.topAnchor.constraint(equalTo: labelPhotos.bottomAnchor, constant: 12),
+            stackViewImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            stackViewImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            stackViewImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
 
             previewImageOne.widthAnchor.constraint(greaterThanOrEqualToConstant: (contentView.frame.width - 24) / 4),
             previewImageOne.heightAnchor.constraint(equalTo: previewImageOne.widthAnchor),

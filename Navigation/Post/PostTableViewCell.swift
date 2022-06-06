@@ -67,25 +67,25 @@ class PostTableViewCell: UITableViewCell {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
 
-            postTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.indent),
-            postTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingMargin),
-            postTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingMargin),
+            postTitle.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            postTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            postTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
             postImage.widthAnchor.constraint(equalTo: contentView.widthAnchor),
             postImage.heightAnchor.constraint(equalTo: postImage.widthAnchor),
-            postImage.topAnchor.constraint(equalTo: postTitle.bottomAnchor, constant: Constants.indent),
+            postImage.topAnchor.constraint(equalTo: postTitle.bottomAnchor, constant: 16),
 
-            postDescription.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: Constants.indent),
-            postDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingMargin),
-            postDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingMargin),
+            postDescription.topAnchor.constraint(equalTo: postImage.bottomAnchor, constant: 16),
+            postDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            postDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 
-            postLikes.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: Constants.indent),
-            postLikes.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.leadingMargin),
-            postLikes.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.indent),
+            postLikes.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: 16),
+            postLikes.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            postLikes.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
 
-            postViews.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: Constants.indent),
-            postViews.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Constants.trailingMargin),
-            postViews.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.indent)
+            postViews.topAnchor.constraint(equalTo: postDescription.bottomAnchor, constant: 16),
+            postViews.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            postViews.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
 

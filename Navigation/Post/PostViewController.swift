@@ -6,24 +6,34 @@
 //
 
 import UIKit
-import StorageService
 
 class PostViewController: UIViewController {
+
+    private let coordinator: PostCoordinator?
+
+    var postTitle: String?
+
+    init(coordinator: PostCoordinator?, postTitle: String?) {
+        self.coordinator = coordinator
+        self.postTitle = postTitle
+        super.init(nibName: nil, bundle: nil)
+    }
     
-    var post: Post?
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // title = post?.title
-        view.backgroundColor = .brown
-        
-        let barButton = UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(tapInfo))
+        view.backgroundColor = .lightGray
+        self.title = postTitle
+        var barButton = UIBarButtonItem()
+        barButton = UIBarButtonItem(title: "Info", style: .plain, target: self, action: #selector(tapInfo))
         navigationItem.rightBarButtonItem = barButton
     }
-    
+
     @objc func tapInfo() {
-        let vcInfo = InfoViewController()
-        present(vcInfo, animated: true, completion: nil)
+        let coordinator = InfoCoordinator()
+        coordinator.push(controller: navigationController, coordinator: coordinator)
     }
 }
-

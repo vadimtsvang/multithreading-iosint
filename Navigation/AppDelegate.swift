@@ -21,8 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appendArrayPhotos()
         self.window?.rootViewController = coordinator.startApplication(userData: nil)
 
-        let appConfiguration = AppConfiguration.randomURL()
-        NetworkManager.shared.fetchData(url: appConfiguration)
+        NetworkManager.shared.dataTitle()
+        NetworkManager.shared.dataPlanet()
+//        let appConfiguration = AppConfiguration.randomURL()
+//        NetworkManager.shared.fetchData(url: appConfiguration)
         
         return true
     }

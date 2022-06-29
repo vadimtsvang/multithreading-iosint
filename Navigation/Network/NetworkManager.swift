@@ -10,21 +10,51 @@ import Foundation
 struct NetworkManager {
     
     static let shared = NetworkManager()
-
-    func fetchData(url: String) {
-
-        guard let url = URL(string: url) else { return }
-        let request = URLRequest(url: url)
+    
+    static private(set) var title: String = ""
+    static private(set) var planetData = ""
+    static private(set) var planetName = ""
+    
+    func dataTitle() {
+        guard let url = URL(string: "https://jsonplaceholder.typicode.com/todos/2") else { return }
         let session = URLSession(configuration: .default)
-        session.dataTask(with: request) { data, response, error in
-            if let data = data,
-               let response = response as? HTTPURLResponse {
-                print("data: \(data) \(String(decoding: data, as: UTF8.self))")
-                print("response: \(response.statusCode) \(response.allHeaderFields)")
-            }
+        let task = session.dataTask(with: url ) { data, response, error in
             if let error = error {
-                print("error: \(error.localizedDescription)")
+                print("Error \(error.localizedDescription)")
+                return
             }
-        }.resume()
+            
+            guard let data = data else { return }
+            do {
+                let serializedDictionary = try JSONSerialization.jsonObject(with: data, options: [])
+                guard let dictionary = serializedDictionary as? [String : Any] else { return }
+                guard let title = dictionary["title"] as? String else { return }
+                NetworkManager.title = title
+            } catch {
+                print("Error \(error.localizedDescription)")
+            }
+        }
+        task.resume()
+    }
+            
+    func dataPlanet() {
+        guard let url = URL(string: "https://swapi.dev/api/planets/1") else { return }
+        let session = URLSession(configuration: .default)
+        let task = session.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            guard let data = data else { return }
+            let decoder = JSONDecoder()
+            do {
+                let dataJSON = try decoder.decode(Planet.self, from: data)
+                NetworkManager.planetData = dataJSON.orbitalPeriod
+                NetworkManager.planetName = dataJSON.name
+            } catch {
+                print("Error \(error.localizedDescription)")
+            }
+        }
+        task.resume()
     }
 }

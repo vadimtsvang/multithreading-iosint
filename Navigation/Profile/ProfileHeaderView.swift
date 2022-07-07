@@ -148,7 +148,7 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
     }
     
     func currentUser(user: User) {
-        userName.text = user.fullName
+        userName.text = user.login
         avatar.image = user.userAvatar
         statusLabel.text = user.userStatus
 

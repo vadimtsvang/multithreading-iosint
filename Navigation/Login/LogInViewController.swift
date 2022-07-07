@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import FirebaseAuth
 
-class LogInViewController: UIViewController, UITextFieldDelegate {
+class LogInViewController: UIViewController {
     
     var delegate: LoginViewControllerDelegate?
     var callback: (_ userData: (userService: UserServiceProtocol, userLogin: String)) -> Void
+    private let minLenght = 6
     
     private lazy var loginScrollView: UIScrollView = {
         let loginScrollView = UIScrollView()
@@ -94,28 +96,38 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return loginButton
     }()
     
-    private lazy var bruteForceButton: UIButton = {
-        let button = UIButton()
-        if let image = UIImage(named: "blue_pixel") {
-            button.setBackgroundImage(image.image(alpha: 1), for: .normal)
-            button.setBackgroundImage(image.image(alpha: 0.8), for: .selected)
-            button.setBackgroundImage(image.image(alpha: 0.8), for: .highlighted)
-            button.setBackgroundImage(image.image(alpha: 0.8), for: .disabled)
-        }
-        button.setTitle("Подбор пароля", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.toAutoLayout()
-        button.layer.cornerRadius = 10
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(bruteForceAction), for: .touchUpInside)
-        return button
-    }()
+//    private lazy var bruteForceButton: UIButton = {
+//        let button = UIButton()
+//        if let image = UIImage(named: "blue_pixel") {
+//            button.setBackgroundImage(image.image(alpha: 1), for: .normal)
+//            button.setBackgroundImage(image.image(alpha: 0.8), for: .selected)
+//            button.setBackgroundImage(image.image(alpha: 0.8), for: .highlighted)
+//            button.setBackgroundImage(image.image(alpha: 0.8), for: .disabled)
+//        }
+//        button.setTitle("Подбор пароля", for: .normal)
+//        button.setTitleColor(.white, for: .normal)
+//        button.toAutoLayout()
+//        button.layer.cornerRadius = 10
+//        button.clipsToBounds = true
+//        button.addTarget(self, action: #selector(bruteForceAction), for: .touchUpInside)
+//        return button
+//    }()
     
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.isHidden = true
-        indicator.toAutoLayout()
-        return indicator
+//    private lazy var activityIndicator: UIActivityIndicatorView = {
+//        let indicator = UIActivityIndicatorView(style: .medium)
+//        indicator.isHidden = true
+//        indicator.toAutoLayout()
+//        return indicator
+//    }()
+    
+    private lazy var registerButton: UIButton = {
+        let button = UIButton()
+        button.toAutoLayout()
+        button.setTitle("Register your account", for: .normal)
+        button.setTitleColor(UIColor(hex: "#4885CC"), for: .normal)
+        button.setTitleColor(.gray, for: .highlighted)
+        button.addTarget(self, action: #selector(registerAction), for: .touchUpInside)
+        return button
     }()
     
     init(callback: @escaping (_ userData: (userService: UserServiceProtocol, userLogin: String)) -> Void) {
@@ -127,30 +139,30 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func bruteForceAction() {
-        let queue = DispatchQueue.global(qos: .userInteractive)
-        guard let login = loginTextField.text else { return }
-        guard login != "" else {
-            let alert = UIAlertController(title: "Ошибка", message: "Подбор пароля для логина Corgi", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "ОК", style: .default)
-            alert.addAction(alertAction)
-            present(alert, animated: true)
-            return
-        }
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-        queue.async {
-            let bruteForce = BruteForce(loginInspector: self.delegate, login: login) { [weak self] password in
-                DispatchQueue.main.async {
-                    self?.passwordTextField.text = password
-                    self?.passwordTextField.isSecureTextEntry = false
-                    self?.activityIndicator.stopAnimating()
-                    self?.activityIndicator.isHidden = true
-                }
-            }
-            bruteForce.bruteForce()
-        }
-    }
+//    @objc func bruteForceAction() {
+//        let queue = DispatchQueue.global(qos: .userInteractive)
+//        guard let login = loginTextField.text else { return }
+//        guard login != "" else {
+//            let alert = UIAlertController(title: "Ошибка", message: "Подбор пароля для логина Corgi", preferredStyle: .alert)
+//            let alertAction = UIAlertAction(title: "ОК", style: .default)
+//            alert.addAction(alertAction)
+//            present(alert, animated: true)
+//            return
+//        }
+//        activityIndicator.isHidden = false
+//        activityIndicator.startAnimating()
+//        queue.async {
+//            let bruteForce = BruteForce(loginInspector: self.delegate, login: login) { [weak self] password in
+//                DispatchQueue.main.async {
+//                    self?.passwordTextField.text = password
+//                    self?.passwordTextField.isSecureTextEntry = false
+//                    self?.activityIndicator.stopAnimating()
+//                    self?.activityIndicator.isHidden = true
+//                }
+//            }
+//            bruteForce.bruteForce()
+//        }
+//    }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -182,14 +194,18 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
             
-            bruteForceButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
-            bruteForceButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            bruteForceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            bruteForceButton.heightAnchor.constraint(equalToConstant: 50),
+//            bruteForceButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 16),
+//            bruteForceButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            bruteForceButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+//            bruteForceButton.heightAnchor.constraint(equalToConstant: 50),
+//
+//            activityIndicator.bottomAnchor.constraint(equalTo: loginStackView.bottomAnchor),
+//            activityIndicator.centerXAnchor.constraint(equalTo: loginStackView.centerXAnchor),
+//            activityIndicator.heightAnchor.constraint(equalToConstant: 100)
             
-            activityIndicator.bottomAnchor.constraint(equalTo: loginStackView.bottomAnchor),
-            activityIndicator.centerXAnchor.constraint(equalTo: loginStackView.centerXAnchor),
-            activityIndicator.heightAnchor.constraint(equalToConstant: 100)
+            registerButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 10),
+            registerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            registerButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
@@ -197,7 +213,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = .white
         view.addSubview(loginScrollView)
         loginScrollView.addSubview(contentView)
-        contentView.addSubviews(imageVK, loginStackView, loginButton, bruteForceButton, activityIndicator)
+        contentView.addSubviews(imageVK, loginStackView, loginButton, registerButton)
         loginStackView.addArrangedSubview(loginTextField)
         loginStackView.addArrangedSubview(passwordTextField)
         setupConstraints()
@@ -213,46 +229,36 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     @objc private func pressLogIn() {
         
-        guard let delegate = delegate else { return }
         guard let login = loginTextField.text else { return }
         guard let password = passwordTextField.text else { return }
         
-        DispatchQueue.global().async {
-            self.authorization(delegate: delegate,
-                               login: login,
-                               password: password) { result in
-                switch result {
-                case .success(true):
-                    DispatchQueue.main.async {
-                        let userService = CurrentUserService()
-                        self.callback((userService: userService, userLogin: login))
-                    }
-                case .failure(.noLogin):
-                    DispatchQueue.main.async {
-                        let alertVC = UIAlertController(title: "Ошибка", message: "Введите логин", preferredStyle: .alert)
-                        let alertAction = UIAlertAction(title: "ОК", style: .default)
-                        alertVC.addAction(alertAction)
-                        self.present(alertVC, animated: true)
-                    }
-                case .failure(.noPassword):
-                    DispatchQueue.main.async {
-                        let alertVC = UIAlertController(title: "Ошибка", message: "Введите пароль", preferredStyle: .alert)
-                        let alertAction = UIAlertAction(title: "ОК", style: .default)
-                        alertVC.addAction(alertAction)
-                        self.present(alertVC, animated: true)
-                    }
-                case .failure(.wrongDate):
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "Ошибка", message: "Введен неверный логин или пароль", preferredStyle: .alert)
-                        let alertAction = UIAlertAction(title: "ОК", style: .default)
-                        alert.addAction(alertAction)
-                        self.present(alert, animated: true)
-                    }
-                default :
-                    break
-                }
+        self.delegate?.checkCredential(email: login, password: password, callback: { [weak self] success in
+            if success {
+                let userService = CurrentUserService(login: "Corgi",
+                                                     userStatus: "Thinking out loud",
+                                                     userAvatar: "dog")
+                self?.callback((userService: userService, userLogin: login))
+                print("success")
+            } else {
+                self?.checkPassword(message: "Заполните поля для входа")
+                print("error")
             }
-        }
+        })
+    }
+    
+    @objc func registerAction() {
+
+        guard let login = loginTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+
+        self.delegate?.createUser(email: login, password: password, callback: { [weak self] success in
+            if success == true {
+                print("user created")
+            } else {
+                self?.checkPassword(message: "Заполните поля для регистрации")
+                print("error")
+            }
+        })
     }
     
     //        if login.isEmpty {
@@ -330,22 +336,29 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
 }
 
 extension LogInViewController {
-    private func authorization(delegate: LoginViewControllerDelegate?,
-                               login: String,
-                               password: String,
-                               completion: (Result<Bool, AuthorizationErrors>) -> Void) {
-        guard let delegate = delegate else { return }
-        let isRight = delegate.check(login: login, password: password)
-        if login.isEmpty {
-            completion(.failure(.noLogin))
+    
+    private func checkPassword(message: String) {
+        guard let login = loginTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        if login.isEmpty || password.isEmpty {
+            let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "ОК", style: .default)
+            alert.addAction(alertAction)
+            present(alert, animated: true)
+            return
+        } else if password.count < minLenght {
+            let alert = UIAlertController(title: "Ошибка", message: "Пароль должен содержать минимум 6 символов", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "ОК", style: .default)
+            alert.addAction(alertAction)
+            present(alert, animated: true)
+            return
         }
-        if password.isEmpty {
-            completion(.failure(.noPassword))
-        }
-        if isRight{
-            completion(.success(true))
-        } else {
-            completion(.failure(.wrongDate))
-        }
+    }
+}
+
+extension LogInViewController: UITextFieldDelegate {
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return !string.contains(where: {$0 == " " || $0 == "#"})
     }
 }

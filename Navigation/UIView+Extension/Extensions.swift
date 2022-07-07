@@ -76,8 +76,8 @@ extension UITextField {
     }
 }
 
-public enum AuthorizationErrors: Error {
-    case noLogin
-    case noPassword
-    case wrongDate
+enum AuthorizationError: Error {
+    case badLogin
+    case badPassword
+    case badAuthData
 }

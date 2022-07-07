@@ -11,7 +11,6 @@ import UIKit
 final class TestUserService: UserServiceProtocol {
 
     var user = User(login: "James",
-                    fullName: "James",
                     userStatus: "My status",
                     userAvatar: UIImage(named: "userAvatar"))
 

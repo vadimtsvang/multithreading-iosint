@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,8 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appendArrayPhotos()
         self.window?.rootViewController = coordinator.startApplication(userData: nil)
 
-        NetworkManager.shared.dataTitle()
-        NetworkManager.shared.dataPlanet()
+        FirebaseApp.configure()
+
+//        NetworkManager.shared.dataTitle()
+//        NetworkManager.shared.dataPlanet()
 //        let appConfiguration = AppConfiguration.randomURL()
 //        NetworkManager.shared.fetchData(url: appConfiguration)
         

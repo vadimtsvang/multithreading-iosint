@@ -11,7 +11,7 @@ struct Password {
 
     static let shared = Password()
 
-    private let password = "Пароль"
+    private let password = "123123"
 
     func check(_ word: String) {
 

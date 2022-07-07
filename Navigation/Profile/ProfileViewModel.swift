@@ -19,10 +19,10 @@ final class ProfileViewModel: ProfileViewModelProtocol {
         if postArray.count != 0 {
             return postArray.count
         } else {
-            throw AuthorizationErrors.wrongDate
+            throw AuthorizationError.badAuthData
         }
     }
-
+    
     public var postArray: [Post] = [
         Post(title: "Houston Rockets",
              description: "The Houston Rockets currently have the worst record in the league at 17-51, which is a half-game worse (or better depending on how you look at it) than the Orlando Magic. Once you get to this point in a season where you aren't competing for a playoff spot, you have to start evaluating your current roster to see what you have for the following season.",
@@ -57,7 +57,7 @@ final class ProfileViewModel: ProfileViewModelProtocol {
 //        if postArray.count != 0 {
 //            return postArray.count
 //        } else {
-//            throw AuthorizationErrors.wrongDate
+//            throw AuthorizationErrors.badAuthData
 //        }
 //    }
     
@@ -66,3 +66,4 @@ final class ProfileViewModel: ProfileViewModelProtocol {
         return PostTableViewModel(post: post)
     }
 }
+

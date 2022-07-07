@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ProfileViewController: UIViewController {
     
@@ -29,10 +30,23 @@ class ProfileViewController: UIViewController {
         self.userLogin = userLogin
         
         super.init(nibName: nil, bundle: nil)
+        let exitBarButton = UIBarButtonItem(title: "Exit",
+                                            style: .plain,
+                                            target: self, action: #selector(exitProfile))
+        self.navigationItem.rightBarButtonItem = exitBarButton
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func exitProfile() {
+        do {
+            try Auth.auth().signOut()
+            coordinator?.exitProfile()
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     static var postTableView: UITableView = {
